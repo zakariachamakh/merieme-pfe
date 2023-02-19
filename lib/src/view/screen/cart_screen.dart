@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:office_furniture_store/core/app_color.dart';
 import 'package:office_furniture_store/core/app_style.dart';
+import 'package:office_furniture_store/src/view/screen/payment.dart';
 import 'package:office_furniture_store/src/view/widget/bottom_bar.dart';
 import 'package:office_furniture_store/src/view/screen/home_screen.dart';
 import 'package:office_furniture_store/src/view/widget/empty_widget.dart';
@@ -35,7 +36,11 @@ class CartScreen extends StatelessWidget {
             priceLabel: "Total price",
             priceValue: "\$${controller.totalPrice.value.toStringAsFixed(2)}",
             buttonLabel: "Checkout",
-            onTap: controller.totalPrice > 0 ? () {} : null,
+            onTap: controller.totalPrice > 0
+                ? () {
+                    Get.to(StripeCheckoutPage());
+                  }
+                : null,
           );
         },
       ),

@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:office_furniture_store/core/app_data.dart';
 import 'package:office_furniture_store/core/app_style.dart';
 import 'package:office_furniture_store/src/model/furniture.dart';
 import 'package:office_furniture_store/src/view/widget/furniture_list_view.dart';
 import 'package:office_furniture_store/src/view/screen/office_furniture_detail_screen.dart';
 
-class OfficeFurnitureListScreen extends StatelessWidget {
-  const OfficeFurnitureListScreen({Key? key}) : super(key: key);
+class OfficeFurnitureListScreen extends StatefulWidget {
+  const OfficeFurnitureListScreen({super.key});
+
+  @override
+  State<OfficeFurnitureListScreen> createState() =>
+      _OfficeFurnitureListScreenState();
+}
+
+class _OfficeFurnitureListScreenState extends State<OfficeFurnitureListScreen> {
+  final furnitureController = Get.put(FurnitureController());
+  final box = GetStorage();
 
   PreferredSize _appBar() {
+    final String username = box.read('username');
     return PreferredSize(
       preferredSize: const Size.fromHeight(120),
       child: SafeArea(
@@ -19,9 +31,9 @@ class OfficeFurnitureListScreen extends StatelessWidget {
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text("Hello Sina", style: h2Style),
-                  Text("Buy Your favorite desk", style: h3Style),
+                children: [
+                  Text("Hello ${username}", style: h2Style),
+                  Text("Buy Your favorite product", style: h3Style),
                 ],
               ),
               IconButton(onPressed: () {}, icon: const Icon(Icons.menu))
@@ -68,19 +80,68 @@ class OfficeFurnitureListScreen extends StatelessWidget {
         child: ListView(
           children: [
             _searchBar(),
-            FurnitureListView(
-              furnitureList: AppData.furnitureList,
-              onTap: navigate,
-            ),
-            const Text("Popular", style: h2Style),
-            FurnitureListView(
-              furnitureList: AppData.furnitureList,
-              isHorizontal: false,
-              onTap: navigate,
-            ),
+            Obx(() {
+              if (furnitureController.isLoading.value) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (furnitureController.hasError.value) {
+                return Center(
+                  child: Text(
+                    'Error: ${furnitureController.errorMessage.value}',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                );
+              } else {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Featured", style: h2Style),
+                    FurnitureListView(
+                      furnitureList: furnitureController.furnitureList.value,
+                      onTap: navigate,
+                    ),
+                    const SizedBox(height: 20),
+                    const Text("Popular", style: h2Style),
+                    FurnitureListView(
+                      furnitureList: furnitureController.furnitureList.value,
+                      isHorizontal: false,
+                      onTap: navigate,
+                    ),
+                  ],
+                );
+              }
+            }),
           ],
         ),
       ),
     );
+  }
+}
+
+class FurnitureController extends GetxController {
+  final isLoading = true.obs;
+  final hasError = false.obs;
+  final errorMessage = ''.obs;
+  final furnitureList = RxList<Furniture>();
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchFurnitureList();
+  }
+
+  Future<void> fetchFurnitureList() async {
+    try {
+      isLoading(true);
+      final list = await AppData.getFurnitureList();
+      if (list != null) {
+        furnitureList.assignAll(list);
+      }
+      hasError(false);
+    } catch (e) {
+      hasError(true);
+      errorMessage(e.toString());
+    } finally {
+      isLoading(false);
+    }
   }
 }

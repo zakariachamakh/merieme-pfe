@@ -29,7 +29,7 @@ class FurnitureListView extends StatelessWidget {
   Widget _furnitureImage(String image) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(15.0),
-      child: Image.asset(image, width: 150, height: 150),
+      child: Image.network(image, width: 150, height: 150),
     ).fadeAnimation(0.4);
   }
 

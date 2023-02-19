@@ -12,9 +12,9 @@ final OfficeFurnitureController controller =
     Get.put(OfficeFurnitureController());
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  HomeScreen({Key? key}) : super(key: key);
 
-  final List<Widget> screens = const [
+  final List<Widget> screens = [
     OfficeFurnitureListScreen(),
     CartScreen(),
     FavoriteScreen(),

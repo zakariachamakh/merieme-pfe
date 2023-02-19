@@ -1,6 +1,7 @@
 import 'package:office_furniture_store/src/model/furniture_color.dart';
 
 class Furniture {
+  int id;
   String title;
   String description;
   double price;
@@ -8,9 +9,9 @@ class Furniture {
   double score;
   List<String> images;
   bool isFavorite;
-  List<FurnitureColor> colors;
 
   Furniture({
+    required this.id,
     required this.title,
     required this.description,
     required this.price,
@@ -18,6 +19,5 @@ class Furniture {
     required this.score,
     required this.images,
     this.isFavorite = false,
-    required this.colors,
   });
 }

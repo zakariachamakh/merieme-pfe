@@ -7,7 +7,6 @@ import 'package:office_furniture_store/core/app_extension.dart';
 import 'package:office_furniture_store/src/model/furniture.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:office_furniture_store/src/view/widget/rating_bar.dart';
-import 'package:office_furniture_store/src/view/widget/color_picker.dart';
 import 'package:office_furniture_store/src/view/screen/home_screen.dart';
 import 'package:office_furniture_store/src/view/widget/counter_button.dart';
 import 'package:office_furniture_store/src/controller/office_furniture_controller.dart';
@@ -100,7 +99,7 @@ class OfficeFurnitureDetailScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                   child: Hero(
                     tag: index,
-                    child: Image.asset(
+                    child: Image.network(
                       furniture.images[index],
                       fit: BoxFit.fill,
                     ),
@@ -171,12 +170,6 @@ class OfficeFurnitureDetailScreen extends StatelessWidget {
                 const SizedBox(height: 20),
                 Row(
                   children: [
-                    const Text(
-                      "Color :",
-                      style: h2Style,
-                      textAlign: TextAlign.end,
-                    ),
-                    Expanded(child: ColorPicker(furniture.colors)),
                     Expanded(child: GetBuilder(
                       builder: (OfficeFurnitureController controller) {
                         return CounterButton(
